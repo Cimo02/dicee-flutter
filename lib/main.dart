@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 void main() {
   return runApp(
@@ -6,7 +7,8 @@ void main() {
       home: Scaffold(
         backgroundColor: Colors.red,
         appBar: AppBar(
-          title: Text('Dicee'),
+          title: Text('dicee'),
+          elevation: 0.0,
           backgroundColor: Colors.red,
         ),
         body: DicePage(),
@@ -15,23 +17,63 @@ void main() {
   );
 }
 
-class DicePage extends StatelessWidget {
+class DicePage extends StatefulWidget {
+  @override
+  _DicePageState createState() => _DicePageState();
+}
+
+class _DicePageState extends State<DicePage> {
+  int leftDiceNumber = 1;
+  int rightDiceNumber = 2;
+
+  void _changeBothDie() {
+    setState(() {
+      leftDiceNumber = Random().nextInt(6) + 1;
+      rightDiceNumber = Random().nextInt(6) + 1;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Row(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Image.asset('images/dice1.png'),
-            ), //use Image.asset as a shortcut for AssetImages
+          Row(
+            children: [
+              Expanded(
+                child: FlatButton(
+                  child: Image.asset('images/dice$leftDiceNumber.png'),
+                  onPressed: () {
+                    setState(() {
+                      leftDiceNumber = Random().nextInt(6) + 1;
+                    });
+                  },
+                ), //use Image.asset as a shortcut for AssetImages
+              ),
+              Expanded(
+                child: FlatButton(
+                  child: Image.asset('images/dice$rightDiceNumber.png'),
+                  onPressed: () {
+                    setState(() {
+                      rightDiceNumber = Random().nextInt(6) + 1;
+                    });
+                  },
+                ),
+              ),
+            ],
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Image.asset('images/dice2.png'),
+          SizedBox(
+            height: 75.0,
+          ),
+          FloatingActionButton(
+            child: Icon(
+              Icons.shuffle_rounded,
+              size: 40.0,
+              color: Colors.red,
             ),
+            onPressed: _changeBothDie,
+            backgroundColor: Colors.white,
           ),
         ],
       ),
